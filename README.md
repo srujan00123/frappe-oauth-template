@@ -1,6 +1,6 @@
-# Frappe OAuth Demo with Next.js
+# Frappe Next.js OAuth Template
 
-A complete implementation of OAuth 2.0 authentication with Frappe Framework using Next.js 15, TypeScript, Tailwind CSS, and frappe-react-sdk.
+A production-ready Next.js 15 template for building applications with Frappe Framework using OAuth 2.0 authentication. Includes complete integration with frappe-react-sdk for seamless API access.
 
 ## Features
 
@@ -213,15 +213,17 @@ export default function ProtectedPage() {
 
 ### Using frappe-react-sdk
 
-Once authenticated, use frappe-react-sdk hooks:
+Once authenticated, use frappe-react-sdk hooks for Frappe API operations. For comprehensive documentation on all available hooks and usage examples, see [FRAPPE_REACT_SDK_GUIDE.md](FRAPPE_REACT_SDK_GUIDE.md).
+
+Quick example:
 
 ```typescript
 import { useFrappeGetDocList } from "frappe-react-sdk";
 
 function MyComponent() {
-  const { data, error, isLoading } = useFrappeGetDocList("Patient", {
-    fields: ["name", "patient_name", "email"],
-    filters: [["status", "=", "Active"]],
+  const { data, error, isLoading } = useFrappeGetDocList("ToDo", {
+    fields: ["name", "description", "status"],
+    filters: [["status", "=", "Open"]],
     limit: 10,
   });
 
@@ -238,14 +240,12 @@ function RoleBasedComponent() {
   const { userInfo } = useFrappeAuth();
 
   const isManager = userInfo?.roles.includes("System Manager");
-  const isDoctorOrNurse = userInfo?.roles.some(role =>
-    ["Healthcare Practitioner", "Nursing User"].includes(role)
-  );
+  const canViewReports = userInfo?.roles.includes("Report Manager");
 
   return (
     <div>
       {isManager && <AdminPanel />}
-      {isDoctorOrNurse && <PatientList />}
+      {canViewReports && <ReportsSection />}
     </div>
   );
 }
@@ -253,7 +253,7 @@ function RoleBasedComponent() {
 
 ## Frappe OAuth Endpoints
 
-This demo uses the following Frappe endpoints:
+This template uses the following Frappe endpoints:
 
 - **Authorization**: `/api/method/frappe.integrations.oauth2.authorize`
 - **Token**: `/api/method/frappe.integrations.oauth2.get_token`
@@ -398,6 +398,16 @@ This approach requires custom backend code in Frappe.
 
 MIT
 
+## Getting Started with Your App
+
+Now that you have OAuth authentication working, you can:
+
+1. **Read the SDK Guide**: See [FRAPPE_REACT_SDK_GUIDE.md](FRAPPE_REACT_SDK_GUIDE.md) for complete documentation on using frappe-react-sdk hooks
+2. **Create New Pages**: Add pages in the `app/` directory following Next.js App Router conventions
+3. **Build Components**: Use frappe-react-sdk hooks to interact with your Frappe backend
+4. **Customize Dashboard**: Modify [app/dashboard/page.tsx](app/dashboard/page.tsx) to add your app's functionality
+5. **Deploy**: Build and deploy your app following Next.js deployment guides
+
 ## Contributing
 
-This is a demo project for educational purposes. Feel free to use it as a starting point for your own Frappe OAuth implementations!
+This is a template project for building Frappe-powered applications. Feel free to fork, customize, and use it as a foundation for your own projects!
