@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { FrappeProvider } from "frappe-react-sdk";
+import { FrappeProvider, FrappeContext } from "frappe-react-sdk";
 import {
   getAuthorizationUrl,
   exchangeCodeForToken,
@@ -38,10 +38,12 @@ export function FrappeAuthProvider({ children }: FrappeAuthProviderProps) {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [idToken, setIdToken] = useState<IdTokenPayload | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-
   // Environment variables
   const frappeServerUrl = process.env.NEXT_PUBLIC_FRAPPE_SERVER_URL!;
-  const socketIOPort = process.env.NEXT_PUBLIC_SOCKETIO_PORT || "9000";
+  // Leave socketIOPort undefined when empty to use default /socket.io path (for Cloudflare tunnel)
+  const socketIOPort = process.env.NEXT_PUBLIC_SOCKETIO_PORT || undefined;
+  // For now, hardcode siteName - in production, fetch from API like Raven mobile does
+  const siteName = "emr.localhost";
   const clientId = process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID!;
   const clientSecret = process.env.OAUTH_CLIENT_SECRET || "";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
@@ -303,7 +305,8 @@ export function FrappeAuthProvider({ children }: FrappeAuthProviderProps) {
             token: () => accessToken,
             type: "Bearer",
           }}
-          socketPort={socketIOPort}
+          {...(socketIOPort && { socketPort: socketIOPort })}
+          {...(siteName && { siteName: siteName })}
         >
           {children}
         </FrappeProvider>
@@ -323,4 +326,11 @@ export function useFrappeAuth() {
     throw new Error("useFrappeAuth must be used within FrappeAuthProvider");
   }
   return context;
+}
+
+/**
+ * Hook to access Frappe SDK context (including socket)
+ */
+export function useFrappeContext() {
+  return useContext(FrappeContext);
 }

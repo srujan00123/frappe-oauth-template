@@ -190,6 +190,37 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* Demo Links */}
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Real-time Features Demo</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a
+              href="/realtime-test"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-md p-6 hover:shadow-lg transition-all hover:scale-105 block"
+            >
+              <div className="flex items-center mb-3">
+                <svg
+                  className="h-8 w-8 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                <h3 className="text-xl font-bold">Real-time Events Test</h3>
+              </div>
+              <p className="text-blue-50 text-sm">
+                Test Frappe Socket.IO real-time events (Raven-style implementation)
+              </p>
+            </a>
+          </div>
+        </div>
+
         {/* Technical Details */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-blue-900 mb-2">
